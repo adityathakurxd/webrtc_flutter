@@ -66,18 +66,19 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Stack(
-          children: [
-            Positioned(
-                top: 0.0,
-                right: 0.0,
-                left: 0.0,
-                bottom: 0.0,
-                child: RTCVideoView(_localVideoRenderer))
-          ],
-        ));
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Stack(
+        children: [
+          Positioned(
+              top: 0.0,
+              right: 0.0,
+              left: 0.0,
+              bottom: 0.0,
+              child: RTCVideoView(_localVideoRenderer))
+        ],
+      ),
+    );
   }
 }
