@@ -129,12 +129,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _setRemoteDescription() async {
     String jsonString = sdpController.text;
-    dynamic session = await jsonDecode('$jsonString');
+    dynamic session = await jsonDecode(jsonString);
 
     String sdp = write(session, null);
 
     RTCSessionDescription description =
-        new RTCSessionDescription(sdp, _offer ? 'answer' : 'offer');
+        RTCSessionDescription(sdp, _offer ? 'answer' : 'offer');
     print(description.toMap());
 
     await _peerConnection!.setRemoteDescription(description);
@@ -142,9 +142,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addCandidate() async {
     String jsonString = sdpController.text;
-    dynamic session = await jsonDecode('$jsonString');
+    dynamic session = await jsonDecode(jsonString);
     print(session['candidate']);
-    dynamic candidate = new RTCIceCandidate(
+    dynamic candidate = RTCIceCandidate(
         session['candidate'], session['sdpMid'], session['sdpMlineIndex']);
     await _peerConnection!.addCandidate(candidate);
   }
@@ -171,59 +171,21 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(children: [
           Flexible(
             child: Container(
-              key: Key('local'),
-              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-              decoration: BoxDecoration(color: Colors.black),
+              key: const Key('local'),
+              margin: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+              decoration: const BoxDecoration(color: Colors.black),
               child: RTCVideoView(_localVideoRenderer),
             ),
           ),
           Flexible(
             child: Container(
-              key: Key('remote'),
-              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-              decoration: BoxDecoration(color: Colors.black),
+              key: const Key('remote'),
+              margin: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+              decoration: const BoxDecoration(color: Colors.black),
               child: RTCVideoView(_remoteVideoRenderer),
             ),
           ),
         ]),
-      );
-
-  Row offerAndAnswerButtons() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-            onPressed: _createOffer,
-            child: Text("Offer"),
-          ),
-          ElevatedButton(
-            onPressed: _createAnswer,
-            child: Text("Answer"),
-          )
-        ],
-      );
-
-  Padding sdpTextField() => Padding(
-        padding: EdgeInsets.all(16.0),
-        child: TextField(
-          controller: sdpController,
-          keyboardType: TextInputType.multiline,
-          maxLines: 4,
-          maxLength: TextField.noMaxLength,
-        ),
-      );
-
-  Row sdpCandidateButtons() => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-            onPressed: _setRemoteDescription,
-            child: Text("Set Remote Description"),
-          ),
-          ElevatedButton(
-            onPressed: _addCandidate,
-            child: Text("Set Candidate"),
-          ),
-        ],
       );
 
   @override
@@ -235,9 +197,52 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Column(
           children: [
             videoRenderers(),
-            offerAndAnswerButtons(),
-            sdpTextField(),
-            sdpCandidateButtons(),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: TextField(
+                      controller: sdpController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 4,
+                      maxLength: TextField.noMaxLength,
+                    ),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _createOffer,
+                      child: const Text("Offer"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: _createAnswer,
+                      child: const Text("Answer"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: _setRemoteDescription,
+                      child: const Text("Set Remote Description"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: _addCandidate,
+                      child: const Text("Set Candidate"),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ],
         ));
   }
